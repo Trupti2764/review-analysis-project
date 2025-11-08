@@ -1,23 +1,35 @@
-# pos_tag.py
+# pos_tag.py (spaCy version — no NLTK download errors)
 
 import pandas as pd
-import nltk
-from nltk import pos_tag, word_tokenize
+import spacy
 
-# ✅ FIX: Download required NLTK models
-nltk.download("punkt")
-nltk.download("averaged_perceptron_tagger")
+# Load English NLP model
+nlp = spacy.load("en_core_web_sm")
 
 def run_pos_tagging(input_path, output_path):
     df = pd.read_csv(input_path)
 
-    print("🔤 Performing POS tagging...")
+    print("🔤 Performing POS tagging with spaCy...")
 
-    df["pos_tags"] = df["cleaned_review"].apply(lambda x: pos_tag(word_tokenize(str(x))))
+    pos_tags = []
+    adj_counts = []
+    noun_counts = []
+    verb_counts = []
 
-    df["adj_count"] = df["pos_tags"].apply(lambda tags: len([t for t in tags if t[1].startswith("JJ")]))
-    df["noun_count"] = df["pos_tags"].apply(lambda tags: len([t for t in tags if t[1].startswith("NN")]))
-    df["verb_count"] = df["pos_tags"].apply(lambda tags: len([t for t in tags if t[1].startswith("VB")]))
+    for text in df["cleaned_review"].astype(str):
+        doc = nlp(text)
+
+        tags = [(token.text, token.pos_) for token in doc]
+        pos_tags.append(tags)
+
+        adj_counts.append(sum(1 for token in doc if token.pos_ == "ADJ"))
+        noun_counts.append(sum(1 for token in doc if token.pos_ == "NOUN"))
+        verb_counts.append(sum(1 for token in doc if token.pos_ == "VERB"))
+
+    df["pos_tags"] = pos_tags
+    df["adj_count"] = adj_counts
+    df["noun_count"] = noun_counts
+    df["verb_count"] = verb_counts
 
     df.to_csv(output_path, index=False)
     print(f"✅ POS tagging complete.\nSaved to: {output_path}")
