@@ -3,3 +3,17 @@ venv/
 __pycache__/
 *.pyc
 .DS_Store
+
+# Chrome browser profile (DO NOT PUSH)
+chrome_profile/
+
+# Data folders and review files
+data/
+*.csv
+*.pkl
+
+# Outputs
+output/
+
+# Environment variables
+.env
