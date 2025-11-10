@@ -1,18 +1,17 @@
-# pos_tag.py (spaCy version — no NLTK download errors)
-
 import pandas as pd
 import spacy
 
-# Load English NLP model
+# Load English NLP  spaCy model
 nlp = spacy.load("en_core_web_sm")
 
-def run_pos_tagging(input_path, output_path):
+def extract_pos_tagging(input_path, output_path):
     df = pd.read_csv(input_path)
 
-    print("🔤 Performing POS tagging with spaCy...")
+    print("POS tagging using spaCy")
 
+    # to count adjectives, noun, verbs in each review
     pos_tags = []
-    adj_counts = []
+    adj_counts  = []
     noun_counts = []
     verb_counts = []
 
@@ -32,11 +31,11 @@ def run_pos_tagging(input_path, output_path):
     df["verb_count"] = verb_counts
 
     df.to_csv(output_path, index=False)
-    print(f"✅ POS tagging complete.\nSaved to: {output_path}")
+    print(f"POS tagging completed and saved to: {output_path}")
 
 
 if __name__ == "__main__":
     input_file = "data/processed/reviews_cleaned.csv"
     output_file = "data/processed/reviews_pos.csv"
 
-    run_pos_tagging(input_file, output_file)
+    extract_pos_tagging(input_file, output_file)

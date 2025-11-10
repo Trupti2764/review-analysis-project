@@ -17,3 +17,10 @@ output/
 
 # Environment variables
 .env
+
+# Ignore large model files
+models/*.model
+models/*.txt
+models/*.bin
+models/glove/
+models/word2vec.model

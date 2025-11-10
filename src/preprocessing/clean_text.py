@@ -1,12 +1,10 @@
-# clean_text.py
-
 import pandas as pd
 import re
 import nltk
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 
-# Run these once
+# Downloads needed for nltk
 nltk.download("punkt")
 nltk.download("stopwords")
 nltk.download("wordnet")
@@ -14,9 +12,9 @@ nltk.download("wordnet")
 stop_words = set(stopwords.words("english"))
 lemmatizer = WordNetLemmatizer()
 
-def clean_text(text):
+def preprocess_review(text):
     text = text.lower()
-    text = re.sub(r"[^a-zA-Z\s]", " ", text)  # remove punctuation and numbers
+    text = re.sub("[^a-zA-Z]+", " ", text)  #  keep only letters , remove punctuation and numbers
     text = re.sub(r"\s+", " ", text).strip()
 
     tokens = nltk.word_tokenize(text)
@@ -27,19 +25,19 @@ def clean_text(text):
     return " ".join(tokens)
 
 
-def run_cleaning(input_path, output_path):
+def apply_cleaning(input_path, output_path):
     df = pd.read_csv(input_path)
 
-    print("🧹 Cleaning text...")
+    print("Cleaning text...")
 
-    df["cleaned_review"] = df["review_translated"].apply(clean_text)
+    df["cleaned_review"] =  df["review_translated"].apply(preprocess_review)
 
-    df.to_csv(output_path, index=False)
-    print(f"✅ Cleaning complete.\nSaved to: {output_path}")
+    df.to_csv(output_path,  index=False)
+    print(f"Cleaning complete.\nSaved to: {output_path}")
 
 
 if __name__ == "__main__":
     input_file = "data/processed/reviews_translated.csv"
     output_file = "data/processed/reviews_cleaned.csv"
 
-    run_cleaning(input_file, output_file)
+    apply_cleaning(input_file, output_file)

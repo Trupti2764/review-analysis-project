@@ -1,9 +1,7 @@
-# ner.py (spaCy NER)
-
 import pandas as pd
 import spacy
 
-# Load spaCy English model
+# Load English NLP spaCy model
 nlp = spacy.load("en_core_web_sm")
 
 def extract_entities_spacy(text):
@@ -19,19 +17,19 @@ def extract_entities_spacy(text):
     return entities
 
 
-def run_ner(input_path, output_path):
+def apply_ner(input_path, output_path):
     df = pd.read_csv(input_path)
 
-    print("🧠 Running Named Entity Recognition (NER) using spaCy...")
+    print("Named Entity Recognition (NER) using spaCy")
 
     df["entities"] = df["cleaned_review"].astype(str).apply(extract_entities_spacy)
 
     df.to_csv(output_path, index=False)
-    print(f"✅ NER complete.\nSaved to: {output_path}")
+    print(f" NER Done and saved to: {output_path}")
 
 
 if __name__ == "__main__":
     input_file = "data/processed/reviews_.csv"
     output_file = "data/processed/reviews_ner.csv"
 
-    run_ner(input_file, output_file)
+    apply_ner(input_file, output_file)

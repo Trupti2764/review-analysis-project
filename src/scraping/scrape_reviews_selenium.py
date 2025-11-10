@@ -1,7 +1,3 @@
-"""
-Amazon Reviews Scraper - Fixed pagination issue
-"""
-
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
@@ -16,9 +12,6 @@ import random
 import pickle
 import os
 
-# ------------------------------
-# Extract Functions
-# ------------------------------
 
 def get_name(review):
     """Extract reviewer name"""
@@ -113,9 +106,7 @@ def get_review_id(review):
     except:
         return ""
 
-# ------------------------------
-# Driver Setup
-# ------------------------------
+
 
 def setup_driver_with_profile():
     """Setup driver with persistent profile"""
@@ -145,7 +136,7 @@ def setup_driver_with_profile():
 
 def manual_login_and_save(driver):
     """Open browser for manual login"""
-    print("\n🔐 MANUAL LOGIN REQUIRED")
+    print("\n MANUAL LOGIN REQUIRED")
     print("=" * 80)
     print("1. Browser will open Amazon.in")
     print("2. Please LOG IN manually")
@@ -156,7 +147,7 @@ def manual_login_and_save(driver):
     input("\nPress ENTER after you've logged in: ")
     
     pickle.dump(driver.get_cookies(), open("amazon_cookies.pkl", "wb"))
-    print("✅ Cookies saved!\n")
+    print("Cookies saved!\n")
 
 def load_cookies(driver):
     """Load saved cookies"""
@@ -168,13 +159,10 @@ def load_cookies(driver):
                 driver.add_cookie(cookie)
             except:
                 pass
-        print("✅ Loaded saved cookies")
+        print(" Loaded saved cookies")
         return True
     return False
 
-# ------------------------------
-# Main Scraping Function - FIXED
-# ------------------------------
 
 def scrape_amazon_reviews(asin, start_page=1, end_page=5, force_login=False):
     """Scrape Amazon reviews with proper pagination"""
@@ -191,7 +179,7 @@ def scrape_amazon_reviews(asin, start_page=1, end_page=5, force_login=False):
     
     seen_reviews = set()  # Track unique reviews
     
-    print("🚀 Setting up Chrome driver...")
+    print(" Setting up Chrome driver...")
     driver = setup_driver_with_profile()
     
     if force_login or not load_cookies(driver):
@@ -207,7 +195,7 @@ def scrape_amazon_reviews(asin, start_page=1, end_page=5, force_login=False):
         time.sleep(3)
         
         for page_num in range(start_page, end_page + 1):
-            print(f"📄 Page {page_num}...", end=" ", flush=True)
+            print(f" Page {page_num}...", end=" ", flush=True)
             
             try:
                 # Method 1: Use "Next page" button (more reliable)
@@ -230,7 +218,7 @@ def scrape_amazon_reviews(asin, start_page=1, end_page=5, force_login=False):
                 
                 # Check for login redirect
                 if "ap/signin" in driver.current_url or "ap/cvf" in driver.current_url:
-                    print("\n⚠️ Login required. Please login in the browser...")
+                    print("\n Login required. Please login in the browser...")
                     input("Press ENTER after logging in: ")
                     driver.get(driver.current_url)
                 
@@ -255,7 +243,7 @@ def scrape_amazon_reviews(asin, start_page=1, end_page=5, force_login=False):
                     reviews = soup.find_all("li", {"data-hook": "review"})
                 
                 if not reviews:
-                    print("⚠️ No reviews found")
+                    print(" No reviews found")
                     continue
                 
                 # Track new reviews on this page
@@ -287,14 +275,14 @@ def scrape_amazon_reviews(asin, start_page=1, end_page=5, force_login=False):
                     data["title"].append(get_review_title(review))
                     data["review_id"].append(review_id)
                 
-                print(f"✅ {new_reviews} new reviews", end="")
+                print(f" {new_reviews} new reviews", end="")
                 if duplicate_reviews > 0:
                     print(f" ({duplicate_reviews} duplicates)", end="")
                 print(flush=True)
                 
                 # Stop if no new reviews found
                 if new_reviews == 0:
-                    print("\n⚠️ No new reviews found. Stopping.")
+                    print("\n No new reviews found. Stopping.")
                     break
                 
                 # Delay between pages
@@ -303,18 +291,15 @@ def scrape_amazon_reviews(asin, start_page=1, end_page=5, force_login=False):
                     time.sleep(delay)
                 
             except Exception as e:
-                print(f"❌ Error: {str(e)[:80]}")
+                print(f" Error: {str(e)[:80]}")
                 continue
     
     finally:
         driver.quit()
-        print("\n🔒 Browser closed")
+        print("\n Browser closed")
     
     return data
 
-# ------------------------------
-# Main Execution
-# ------------------------------
 
 if __name__ == "__main__":
     
@@ -333,13 +318,13 @@ if __name__ == "__main__":
     
     # Create DataFrame
     df = pd.DataFrame(reviews_data)
-    print(f"\n📊 Total reviews collected: {len(df)}")
+    print(f"\n Total reviews collected: {len(df)}")
     
     # Clean data
     if len(df) > 0:
         df = df[df['review'].astype(str).str.strip() != '']
     
-    print(f"📊 Reviews after cleaning: {len(df)}")
+    print(f"Reviews after cleaning: {len(df)}")
     
     if len(df) > 0:
         # Remove review_id column before saving (internal use only)
@@ -351,7 +336,7 @@ if __name__ == "__main__":
         )
 
         df_export.to_csv(output_file, index=False, encoding='utf-8-sig')
-        print(f"\n✅ Data saved to '{output_file}'")
+        print(f"\n Data saved to '{output_file}'")
 
         
         # Display sample
@@ -372,4 +357,4 @@ if __name__ == "__main__":
             print(f"\nRating Distribution:")
             print(df['rating'].value_counts().sort_index())
     else:
-        print("\n⚠️ No reviews were scraped")
+        print("\n No reviews were scraped")
