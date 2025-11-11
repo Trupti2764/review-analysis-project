@@ -1,82 +1,203 @@
-# 📝 Comprehensive Product Review Analysis (Classical NLP Approach)
+📝 Comprehensive Product Review Analysis (Classical NLP Approach)
 
-This project performs a complete end-to-end analysis of customer reviews for a chosen e-commerce product using **traditional NLP techniques** (non-Transformer based).  
-The goal is to extract, clean, analyze, and interpret genuine customer feedback and convert it into actionable insights.
+This project performs an end-to-end analysis of customer reviews for an e-commerce product using classical Natural Language Processing techniques.
+The aim is to transform raw customer feedback into structured insights through sentiment analysis, topic modeling, semantic similarity, clustering, and evidence-based QA.
 
-✅ **Strict constraint:** No Transformer models, no generative AI models.  
-✅ Only classical NLP methods such as TF-IDF, Word2Vec, LSA, lexicon-based sentiment, rule-based POS/NER, and LSTM.
+✅ No Transformer models
+✅ No generative AI
+✅ Uses only classical NLP methods: TF-IDF, Word2Vec, LSA, VADER, POS/NER, and a lightweight LSTM.
 
----
+📌 1. Project Overview
 
-## ✅ **Project Overview**
+The project simulates the workflow of an NLP engineer analyzing product reviews for an e-commerce platform (Amazon/Flipkart).
+Starting from web scraping, reviews are cleaned, processed, analyzed, and summarized to answer key customer questions and highlight major product themes.
 
-Imagine you are hired as an NLP consultant by an e-commerce platform (Amazon/Flipkart).  
-Your task is to analyze customer reviews for a specific product (minimum 100 reviews) and generate:
+The full pipeline covers:
 
-- ✅ Trends  
-- ✅ Sentiment analysis  
-- ✅ Topic extraction  
-- ✅ Semantic similarity  
-- ✅ Summary of common opinions  
-- ✅ Answers to common user questions  
+✅ Web scraping
 
-This project covers the complete pipeline from **web scraping → preprocessing → syntactic analysis → semantic analysis → ML → insights**.
+✅ Language detection & translation
 
----
+✅ Text cleaning & normalization
 
-## ✅ **Features Implemented**
+✅ Syntactic & semantic analysis
 
-### 🔹 **1. Data Acquisition**
-- Web scraping using BeautifulSoup/Selenium  
-- Handles pagination  
-- Stores scraped reviews in **data/raw/**  
-- Saves cleaned/translated reviews in **data/processed/**  
+✅ Topic extraction
 
-### 🔹 **2. Language Detection + Translation**
-- Detects review language (English/Hindi)  
-- Translates Hindi → English using `googletrans`  
-- Ensures sentiment consistency  
+✅ Sentiment classification
 
-### 🔹 **3. NLP Preprocessing**
-- HTML tag removal  
-- Lowercasing  
-- Tokenization  
-- Stopword removal  
-- Lemmatization / Stemming  
-- Duplicate removal  
+✅ Semantic similarity
 
-### 🔹 **4. Syntactic Analysis**
-- POS tagging (NLTK / spaCy non-transformer model)  
-- Rule-based/statistical NER  
-- Adjective/verb extraction  
+✅ Clustering & review summarization
 
-### 🔹 **5. Semantic Analysis**
-- TF-IDF vectorization  
-- Word2Vec embeddings (gensim)  
-- Cosine similarity across reviews  
-- Identify key features & similar terms  
+✅ Evidence-supported QA
 
-### 🔹 **6. Topic Modeling**
-- Latent Semantic Analysis (LSA)  
-- Extracts 3–5 major topics  
-- Top keywords per topic  
+📌 2. Features Implemented
+🔹 Data Acquisition
 
-### 🔹 **7. Sentiment Analysis**
-- Lexicon-based sentiment (VADER/TextBlob)  
-- LSTM-based sentiment classifier  
-- Overall sentiment distribution  
+Scraping performed using Selenium.
 
-### 🔹 **8. Review Summarization**
-- Cluster reviews using cosine similarity  
-- Identify top representative reviews  
-- Provide human-readable summary  
+Handles pagination and dynamic loading.
 
-### 🔹 **9. Question Answering (Simulated)**
-Based on the analysis:
-- Generates 3–5 common questions a new customer may ask  
-- Provides data-driven answers  
+Raw data stored in data/raw/.
 
----
+Cleaned and processed reviews stored in data/processed/.
 
-## ✅ **Project Folder Structure**
+🔹 Language Detection & Translation
 
+Detects English/Hindi reviews.
+
+Translates Hindi → English using googletrans.
+
+Ensures full sentiment consistency after translation.
+
+🔹 Preprocessing
+
+HTML/emoji cleanup
+
+Lowercasing
+
+Tokenization (spaCy)
+
+Stopword removal
+
+Lemmatization
+
+Duplicate handling
+
+Outputs cleaned files to data/processed/
+
+🔹 Syntactic Analysis
+
+POS tagging (spaCy)
+
+Named Entity Recognition (rule-based/statistical)
+
+Extracts meaningful adjectives, nouns, and verbs used in customer feedback.
+
+🔹 Semantic Analysis
+
+TF-IDF vectorization
+
+Word2Vec training (gensim)
+
+Cosine similarity across review embeddings
+
+Identification of recurring terms and semantic clusters
+
+🔹 Topic Modeling
+
+LSA used to derive 3–5 major topics
+
+Extracts top keywords representing customer discussion themes
+
+Topic report stored in output/reports/topics_lsa.txt
+
+🔹 Sentiment Analysis
+
+VADER lexicon-based sentiment scoring
+
+LSTM model trained on VADER pseudo-labels
+
+Sentiment distribution visualized as plots
+
+Outputs stored in output/processed/
+
+🔹 Review Summarization
+
+Clusters reviews using semantic similarity
+
+Extracts representative reviews per cluster
+
+Produces concise human-readable summaries
+
+Stored in output/reports/review_summary.txt
+
+🔹 Simulated QA
+
+Generates common customer questions such as:
+
+Battery life
+
+Performance
+
+Value for money
+
+Common defects
+
+Recommendation
+
+Answers are evidence-supported using extracted topics, sentiments, and representative reviews.
+
+Outputs:
+
+simulated_qa.txt
+
+qa_evidence_evaluation.txt
+
+qa_topic_match_heatmap.png
+
+📌 3. Project Structure
+project/
+│
+├── data/
+│   ├── raw/                 # Raw scraped reviews
+│   └── processed/           # Cleaned reviews, vectors, labels
+│
+├── models/                  # Word2Vec, GloVe files
+│
+├── output/
+│   ├── embeddings/          # Word2Vec & GloVe vectors
+│   ├── processed/           # TF-IDF, sentiment outputs, LSTM model
+│   ├── reports/             # Topics, summaries, QA results
+│   └── visuals/             # Plots & heatmaps
+│
+└── src/
+    ├── preprocessing/       # Cleaning, translation, language detection
+    ├── nlp/                 # TF-IDF, embeddings, POS, NER, sentiment
+    ├── topic_modeling/      # LSA topic extraction
+    ├── summarization/       # Cluster + representative review extraction
+    ├── qa/                  # Simulated QA + evaluation
+    └── scraping/            # Selenium-based reviewers scraper
+
+📌 4. How to Run
+Step 1: Install dependencies
+pip install -r requirements.txt
+
+Step 2: Activate virtual environment
+./venv/Scripts/Activate.ps1
+
+Step 3: Run scraping
+python src/scraping/scrape_reviews_selenium.py
+
+Step 4: Run preprocessing
+python src/preprocessing/clean_text.py
+
+Step 5: Run full NLP pipeline modules
+
+(Examples)
+
+python src/nlp/bow_tfidf.py
+python src/nlp/embeddings.py
+python src/nlp/sentiment.py
+python src/topic_modeling/lsa_topics.py
+python src/summarization/review_clusters.py
+python src/qa/qa_answers.py
+
+📌 5. Outputs
+
+Key reports generated:
+
+✅ Sentiment distribution
+
+✅ Topic keywords
+
+✅ Cluster summaries
+
+✅ Representative reviews
+
+✅ Evidence-based QA
+
+✅ Embedding similarity charts
+
+All outputs are stored in the output/ directory.
